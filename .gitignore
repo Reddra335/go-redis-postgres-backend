@@ -1,0 +1,63 @@
+# Executables / Binary
+*.exe
+*.exe-
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+main
+app
+
+# Environment Variables & Secrets (SANGAT PENTING!)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Wire Generated Files (Opsional: hapus pagar jika ingin wire_gen di-build otomatis di CI/CD)
+# cmd/wire_gen.go
+
+# Vendor Folder (Jika pakai go mod vendor, hilangkan pagar jika ingin di-ignore)
+# vendor/
+
+# OS Specific Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Code Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+
+# Testing & Coverage
+*.out
+*.test
+coverage.txt
+
+# Log Files
+*.log
+logs/
+
+# Database / Local Storage Data
+*.db
+*.sqlite
+*.sqlite3
+mysql_data/
+redis_data/
+
+# Docker Local Overrides
+docker-compose.override.yml
+
+#mod sum
+*.mod
+*.sum

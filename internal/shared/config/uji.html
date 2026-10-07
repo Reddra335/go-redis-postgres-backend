@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Raka Adiputra — Portfolio</title>
+    <meta
+      name="description"
+      content="Portofolio desainer & pengembang antarmuka. Tipografi, grid, dan ruang kosong."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ============================================================
+   TOKENS
+   ============================================================ */
+      :root {
+        --bg: #f2f0eb;
+        --ink: #0d0d0c;
+        --muted: #8a8578;
+        --line: #dcd7cc;
+        --accent: #ff4a1c;
+
+        --sans:
+          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+        --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+        --pad: clamp(20px, 5vw, 72px);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      /* ============================================================
+   RESET
+   ============================================================ */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.55;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      ::selection {
+        background: var(--ink);
+        color: var(--bg);
+      }
+
+      /* grain overlay */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* scrollbar */
+      ::-webkit-scrollbar {
+        width: 9px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #c9c3b6;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--ink);
+      }
+
+      /* ============================================================
+   HELPERS
+   ============================================================ */
+      .mono {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .wrap {
+        max-width: 1500px;
+        margin: 0 auto;
+      }
+
+      /* progress bar */
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        z-index: 200;
+        background: var(--ink);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+      }
+
+      /* reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 1s var(--ease),
+          transform 1s var(--ease);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ============================================================
+   NAV
+   ============================================================ */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 150;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px var(--pad);
+        border-bottom: 1px solid transparent;
+        transition:
+          background 0.45s ease,
+          border-color 0.45s ease,
+          backdrop-filter 0.45s ease;
+      }
+      .nav.scrolled {
+        background: rgba(242, 240, 235, 0.74);
+        backdrop-filter: blur(16px) saturate(1.3);
+        -webkit-backdrop-filter: blur(16px) saturate(1.3);
+        border-bottom-color: var(--line);
+      }
+      .nav__logo {
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: -0.02em;
+      }
+      .nav__logo em {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+      }
+      .nav__links {
+        display: flex;
+        gap: clamp(16px, 3vw, 38px);
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .nav__links a {
+        color: var(--muted);
+        position: relative;
+        transition: color 0.3s ease;
+        padding-bottom: 4px;
+      }
+      .nav__links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--ink);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.45s var(--ease);
+      }
+      .nav__links a:hover {
+        color: var(--ink);
+      }
+      .nav__links a:hover::after,
+      .nav__links a.active::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+      .nav__links a.active {
+        color: var(--ink);
+      }
+
+      @media (max-width: 640px) {
+        .nav__links a:not(:last-child) {
+          display: none;
+        }
+      }
+
+      /* ============================================================
+   HERO
+   ============================================================ */
+      .hero {
+        min-height: 100vh;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: calc(var(--pad) + 66px) var(--pad) clamp(28px, 4vw, 48px);
+      }
+      .hero__top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .hero__name {
+        font-size: clamp(3.2rem, 15vw, 14rem);
+        line-height: 0.84;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin: clamp(30px, 6vw, 60px) 0;
+      }
+      .hero__name .line {
+        display: block;
+        overflow: hidden;
+        padding-bottom: 0.02em;
+      }
+      .hero__name .line > span {
+        display: block;
+        transform: translateY(108%);
+        animation: riseUp 1.15s var(--ease) forwards;
+      }
+      .hero__name .line:nth-child(1) > span {
+        animation-delay: 0.15s;
+      }
+      .hero__name .line:nth-child(2) > span {
+        animation-delay: 0.3s;
+      }
+      .hero__name .it {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: -0.025em;
+      }
+      @keyframes riseUp {
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .hero__bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 30px;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fadeIn 1s var(--ease) 1s forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      .hero__desc {
+        max-width: 36ch;
+        font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+        color: #3a3730;
+        line-height: 1.6;
+      }
+      .hero__desc em {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 1.15em;
+      }
+
+      .scroll-cue {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .scroll-cue__line {
+        width: clamp(40px, 6vw, 80px);
+        height: 1px;
+        background: var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .scroll-cue__line::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--ink);
+        animation: cue 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+      @keyframes cue {
+        0% {
+          transform: translateX(-101%);
+        }
+        55%,
+        100% {
+          transform: translateX(101%);
+        }
+      }
+
+      /* ============================================================
+   MARQUEE
+   ============================================================ */
+      .marquee {
+        overflow: hidden;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: clamp(18px, 2.4vw, 30px) 0;
+      }
+      .marquee__track {
+        display: flex;
+        width: max-content;
+        animation: marquee 34s linear infinite;
+      }
+      .marquee:hover .marquee__track {
+        animation-play-state: paused;
+      }
+      .marquee__group {
+        display: flex;
+        align-items: center;
+        gap: clamp(22px, 3.6vw, 54px);
+        padding-right: clamp(22px, 3.6vw, 54px);
+      }
+      .marquee__group span {
+        font-size: clamp(1.5rem, 4.4vw, 3.4rem);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        line-height: 1;
+      }
+      .marquee__group span.it {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        text-transform: none;
+        color: var(--muted);
+      }
+      .marquee__group .ast {
+        color: var(--accent);
+        font-size: 0.55em;
+      }
+      @keyframes marquee {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ============================================================
+   SECTION SHELL
+   ============================================================ */
+      .section {
+        padding: clamp(72px, 11vw, 150px) var(--pad);
+      }
+
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: clamp(28px, 4vw, 52px);
+      }
+      .label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+
+      .sec-title {
+        font-size: clamp(2.1rem, 6.2vw, 5.2rem);
+        line-height: 0.98;
+        letter-spacing: -0.045em;
+        font-weight: 700;
+        max-width: 22ch;
+      }
+      .sec-title em {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+      }
+
+      /* ============================================================
+   ABOUT
+   ============================================================ */
+      .about__statement {
+        font-size: clamp(1.5rem, 3.9vw, 3.4rem);
+        line-height: 1.22;
+        letter-spacing: -0.03em;
+        font-weight: 500;
+        max-width: 24ch;
+        margin-bottom: clamp(50px, 8vw, 110px);
+      }
+      .about__statement em {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+      }
+      .about__statement .dim {
+        color: var(--muted);
+      }
+
+      .about__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(36px, 5vw, 80px);
+      }
+      @media (min-width: 920px) {
+        .about__grid {
+          grid-template-columns: 1.05fr 0.95fr;
+          align-items: start;
+        }
+      }
+
+      .about__text p {
+        font-size: clamp(1rem, 1.35vw, 1.12rem);
+        line-height: 1.75;
+        color: #3a3730;
+        max-width: 52ch;
+        margin-bottom: 1.4em;
+      }
+      .about__text p:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .facts {
+        margin-top: clamp(34px, 4vw, 54px);
+      }
+      .facts__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 24px;
+        padding: 15px 0;
+        border-top: 1px solid var(--line);
+      }
+      .facts__row:last-child {
+        border-bottom: 1px solid var(--line);
+      }
+      .facts__row dt {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .facts__row dd {
+        font-size: 0.95rem;
+        text-align: right;
+      }
+      .facts__row dd.live {
+        color: var(--accent);
+      }
+
+      .about__portrait {
+        position: relative;
+        overflow: hidden;
+        background: #e3dfd6;
+      }
+      .about__portrait img {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        filter: saturate(0.85) contrast(1.03);
+        transition: transform 1.6s var(--ease);
+      }
+      .about__portrait:hover img {
+        transform: scale(1.04);
+      }
+      .about__portrait figcaption {
+        margin-top: 14px;
+      }
+
+      /* ============================================================
+   WORK
+   ============================================================ */
+      .work {
+        display: grid;
+        grid-template-columns: auto 1fr auto auto;
+        align-items: center;
+        gap: clamp(14px, 3vw, 44px);
+        padding: clamp(20px, 2.8vw, 34px) 0;
+        border-top: 1px solid var(--line);
+      }
+      .work:last-of-type {
+        border-bottom: 1px solid var(--line);
+      }
+      .work__num {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        transition: color 0.4s ease;
+      }
+      .work__title {
+        font-size: clamp(1.15rem, 3vw, 2.3rem);
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+        transition: transform 0.55s var(--ease);
+      }
+      .work__meta {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .work__arrow {
+        font-size: 1.1rem;
+        color: var(--muted);
+        transition:
+          transform 0.55s var(--ease),
+          color 0.4s ease;
+      }
+      .work:hover .work__title {
+        transform: translateX(clamp(8px, 1.6vw, 24px));
+      }
+      .work:hover .work__arrow {
+        transform: translate(5px, -5px);
+        color: var(--ink);
+      }
+      .work:hover .work__num {
+        color: var(--ink);
+      }
+
+      @media (max-width: 700px) {
+        .work {
+          grid-template-columns: auto 1fr;
+          row-gap: 8px;
+        }
+        .work__meta {
+          grid-column: 2;
+          text-align: left;
+        }
+        .work__arrow {
+          display: none;
+        }
+      }
+
+      /* ============================================================
+   TIPOGRAFI
+   ============================================================ */
+      .specimens {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(10px, 1.2vw, 18px);
+        margin-top: clamp(40px, 5vw, 70px);
+      }
+      @media (min-width: 760px) {
+        .specimens {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .spec {
+        border: 1px solid var(--line);
+        padding: clamp(20px, 2.4vw, 32px);
+        min-height: clamp(200px, 24vw, 300px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 40px;
+        transition:
+          background 0.55s var(--ease),
+          border-color 0.55s var(--ease),
+          color 0.55s var(--ease);
+      }
+      .spec:hover {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+      .spec__aa {
+        font-size: clamp(3.2rem, 7.5vw, 6.2rem);
+        line-height: 0.85;
+        letter-spacing: -0.05em;
+        font-weight: 800;
+      }
+      .spec:nth-child(2) .spec__aa {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+      }
+      .spec:nth-child(3) .spec__aa {
+        font-family: var(--mono);
+        font-weight: 400;
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        letter-spacing: -0.06em;
+      }
+      .spec__meta {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        transition: color 0.55s ease;
+      }
+      .spec:hover .spec__meta {
+        color: rgba(242, 240, 235, 0.55);
+      }
+
+      .scale {
+        margin-top: clamp(46px, 7vw, 90px);
+      }
+      .scale__row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: baseline;
+        padding: clamp(14px, 2vw, 24px) 0;
+        border-top: 1px solid var(--line);
+      }
+      .scale__row:last-child {
+        border-bottom: 1px solid var(--line);
+      }
+      .scale__meta {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        text-transform: uppercase;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .t-display {
+        font-size: clamp(1.9rem, 6vw, 4.4rem);
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 1;
+      }
+      .t-head {
+        font-size: clamp(1.35rem, 3.4vw, 2.4rem);
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+      }
+      .t-body {
+        font-size: clamp(0.95rem, 1.3vw, 1.06rem);
+        line-height: 1.6;
+        color: #3a3730;
+        max-width: 44ch;
+      }
+      .t-cap {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ============================================================
+   ALBUM
+   ============================================================ */
+      .album {
+        columns: 3;
+        column-gap: clamp(10px, 1.2vw, 18px);
+        margin-top: clamp(40px, 5vw, 64px);
+      }
+      @media (max-width: 900px) {
+        .album {
+          columns: 2;
+        }
+      }
+      @media (max-width: 540px) {
+        .album {
+          columns: 1;
+        }
+      }
+
+      .ph {
+        position: relative;
+        overflow: hidden;
+        margin: 0 0 clamp(10px, 1.2vw, 18px);
+        break-inside: avoid;
+        cursor: pointer;
+        background: #e3dfd6;
+      }
+      .ph img {
+        width: 100%;
+        display: block;
+        filter: saturate(0.88) contrast(1.02);
+        transition:
+          transform 1.5s var(--ease),
+          filter 0.6s ease;
+      }
+      .ph:hover img {
+        transform: scale(1.055);
+        filter: saturate(1) contrast(1.05);
+      }
+      .ph__cap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: clamp(14px, 1.6vw, 20px);
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #fff;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.68),
+          rgba(0, 0, 0, 0)
+        );
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.45s ease,
+          transform 0.45s var(--ease);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .ph:hover .ph__cap {
+        opacity: 1;
+        transform: none;
+      }
+      .ph__idx {
+        opacity: 0.6;
+      }
+
+      /* ============================================================
+   CONTACT
+   ============================================================ */
+      .contact {
+        padding: clamp(80px, 12vw, 170px) var(--pad) clamp(50px, 7vw, 90px);
+      }
+      .contact__eyebrow {
+        margin-bottom: clamp(24px, 3vw, 40px);
+      }
+      .contact__mail {
+        display: inline-block;
+        position: relative;
+        font-size: clamp(1.5rem, 6.6vw, 5.6rem);
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        line-height: 1.05;
+        word-break: break-word;
+      }
+      .contact__mail::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0.06em;
+        width: 100%;
+        height: 0.045em;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.7s var(--ease);
+      }
+      .contact__mail:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .socials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(18px, 3vw, 44px);
+        margin-top: clamp(44px, 6vw, 80px);
+        padding-top: clamp(22px, 3vw, 34px);
+        border-top: 1px solid var(--line);
+      }
+      .socials a {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          color 0.35s ease,
+          gap 0.35s var(--ease);
+      }
+      .socials a:hover {
+        color: var(--ink);
+        gap: 14px;
+      }
+      .socials a span {
+        transition: transform 0.35s var(--ease);
+      }
+      .socials a:hover span {
+        transform: translate(3px, -3px);
+      }
+
+      /* ============================================================
+   FOOTER
+   ============================================================ */
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        padding: 26px var(--pad) 30px;
+        border-top: 1px solid var(--line);
+      }
+      .footer a {
+        transition: color 0.3s ease;
+      }
+      .footer a:hover {
+        color: var(--ink);
+      }
+
+      /* ============================================================
+   LIGHTBOX
+   ============================================================ */
+      .lb {
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        background: rgba(13, 13, 12, 0.96);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(20px, 5vw, 64px);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.45s ease,
+          visibility 0.45s ease;
+      }
+      .lb.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .lb__img {
+        max-width: min(1100px, 100%);
+        max-height: 78vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        transform: scale(0.96);
+        opacity: 0;
+        transition:
+          transform 0.6s var(--ease),
+          opacity 0.5s ease;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+      }
+      .lb.open .lb__img {
+        transform: scale(1);
+        opacity: 1;
+      }
+      .lb__cap {
+        position: absolute;
+        bottom: clamp(20px, 4vw, 40px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(242, 240, 235, 0.65);
+        text-align: center;
+      }
+      .lb__btn {
+        position: absolute;
+        color: rgba(242, 240, 235, 0.7);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 14px;
+        transition:
+          color 0.3s ease,
+          transform 0.3s var(--ease);
+      }
+      .lb__btn:hover {
+        color: #fff;
+      }
+      .lb__close {
+        top: clamp(14px, 3vw, 30px);
+        right: clamp(14px, 3vw, 30px);
+        font-size: 18px;
+      }
+      .lb__close:hover {
+        transform: rotate(90deg);
+      }
+      .lb__prev {
+        left: clamp(6px, 2vw, 26px);
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+      }
+      .lb__next {
+        right: clamp(6px, 2vw, 26px);
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+      }
+      .lb__prev:hover {
+        transform: translateY(-50%) translateX(-4px);
+      }
+      .lb__next:hover {
+        transform: translateY(-50%) translateX(4px);
+      }
+
+      /* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+        .hero__name .line > span {
+          transform: none;
+        }
+        .hero__bottom {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- progress -->
+    <div class="progress" id="progress"></div>
+
+    <!-- ============ NAV ============ -->
+    <header class="nav" id="nav">
+      <a href="#home" class="nav__logo">Raka <em>Adiputra</em></a>
+      <nav class="nav__links">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#type">Tipografi</a>
+        <a href="#album">Album</a>
+        <a href="#contact">Kontak</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- ============ HERO ============ -->
+      <section class="hero" id="home">
+        <div class="hero__top">
+          <span class="mono">Portofolio — Vol. 01</span>
+          <span class="mono">Yogyakarta, ID — 2026</span>
+        </div>
+
+        <h1 class="hero__name">
+          <span class="line"><span>Raka</span></span>
+          <span class="line"><span class="it">Adiputra</span></span>
+        </h1>
+
+        <div class="hero__bottom">
+          <p class="hero__desc">
+            Desainer &amp; pengembang antarmuka. Bekerja dengan <em>huruf</em>,
+            grid, dan ruang kosong — karena sedikit yang tepat lebih baik
+            daripada banyak yang berisik.
+          </p>
+          <div class="scroll-cue">
+            <span class="mono">Scroll</span>
+            <span class="scroll-cue__line"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MARQUEE ============ -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+          <div class="marquee__group">
+            <span>Tipografi</span><span class="ast">✳</span>
+            <span class="it">ruang kosong</span><span class="ast">✳</span>
+            <span>Kontras</span><span class="ast">✳</span>
+            <span class="it">ritme</span><span class="ast">✳</span>
+            <span>Grid</span><span class="ast">✳</span>
+            <span class="it">skala</span><span class="ast">✳</span>
+          </div>
+          <div class="marquee__group">
+            <span>Tipografi</span><span class="ast">✳</span>
+            <span class="it">ruang kosong</span><span class="ast">✳</span>
+            <span>Kontras</span><span class="ast">✳</span>
+            <span class="it">ritme</span><span class="ast">✳</span>
+            <span>Grid</span><span class="ast">✳</span>
+            <span class="it">skala</span><span class="ast">✳</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ ABOUT ============ -->
+      <section class="section wrap" id="about">
+        <div class="label reveal"><span class="mono">01 — About</span></div>
+
+        <p class="about__statement reveal">
+          Saya merancang <em>antarmuka</em> dan <em>identitas visual</em> yang
+          tenang. <span class="dim">Ruang kosong bukan kekurangan —</span> ia
+          adalah <em>keputusan</em>.
+        </p>
+
+        <div class="about__grid">
+          <div class="about__text reveal">
+            <p>
+              Nama saya Raka. Delapan tahun terakhir saya habiskan di antara
+              huruf dan piksel: menyusun skala tipografi, merapikan grid, dan
+              memastikan setiap elemen punya alasan untuk ada.
+            </p>
+            <p>
+              Saya percaya desain yang baik tidak berteriak. Ia bekerja
+              diam-diam — mengarahkan mata, mengatur ritme baca, lalu menghilang
+              begitu pesannya tersampaikan. Minimalisme bagi saya bukan gaya,
+              tapi disiplin.
+            </p>
+            <p>
+              Di luar layar, saya memotret jalanan, mengoleksi buku tipografi
+              bekas, dan kadang mengajar kelas huruf untuk pemula.
+            </p>
+
+            <dl class="facts">
+              <div class="facts__row">
+                <dt>Nama</dt>
+                <dd>Raka Adiputra</dd>
+              </div>
+              <div class="facts__row">
+                <dt>Basis</dt>
+                <dd>Yogyakarta, Indonesia</dd>
+              </div>
+              <div class="facts__row">
+                <dt>Fokus</dt>
+                <dd>Art Direction · UI · Tipografi</dd>
+              </div>
+              <div class="facts__row">
+                <dt>Pengalaman</dt>
+                <dd>8 tahun</dd>
+              </div>
+              <div class="facts__row">
+                <dt>Status</dt>
+                <dd class="live">Tersedia 2026</dd>
+              </div>
+            </dl>
+          </div>
+
+          <figure class="about__portrait reveal" data-delay="120">
+            <img
+              src="https://picsum.photos/seed/portrait-raka-01/900/1125"
+              alt="Potret Raka Adiputra"
+              loading="lazy"
+            />
+            <figcaption class="mono">Studio — Yogyakarta, 2025</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ WORK ============ -->
+      <section class="section wrap" id="work">
+        <div class="label reveal">
+          <span class="mono">02 — Selected Work</span>
+        </div>
+        <h2
+          class="sec-title reveal"
+          style="margin-bottom: clamp(40px, 6vw, 72px)"
+        >
+          Proyek yang saya <em>kerjakan</em> dengan sabar.
+        </h2>
+
+        <div class="reveal">
+          <a class="work" href="#">
+            <span class="work__num">01</span>
+            <h3 class="work__title">Kopi Senja — Identitas Visual</h3>
+            <span class="work__meta">Branding · 2025</span>
+            <span class="work__arrow">↗</span>
+          </a>
+          <a class="work" href="#">
+            <span class="work__num">02</span>
+            <h3 class="work__title">Lembar — Aplikasi Baca &amp; Catatan</h3>
+            <span class="work__meta">Product Design · 2025</span>
+            <span class="work__arrow">↗</span>
+          </a>
+          <a class="work" href="#">
+            <span class="work__num">03</span>
+            <h3 class="work__title">Pameran Huruf Nusantara</h3>
+            <span class="work__meta">Exhibition · 2024</span>
+            <span class="work__arrow">↗</span>
+          </a>
+          <a class="work" href="#">
+            <span class="work__num">04</span>
+            <h3 class="work__title">Sistem Tipografi Majalah Ruang</h3>
+            <span class="work__meta">Editorial · 2024</span>
+            <span class="work__arrow">↗</span>
+          </a>
+          <a class="work" href="#">
+            <span class="work__num">05</span>
+            <h3 class="work__title">Arsip — Website Galeri Digital</h3>
+            <span class="work__meta">Web · 2023</span>
+            <span class="work__arrow">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ============ TIPOGRAFI ============ -->
+      <section class="section wrap" id="type">
+        <div class="label reveal"><span class="mono">03 — Tipografi</span></div>
+        <h2 class="sec-title reveal">
+          Huruf adalah <em>suara</em> sebelum kata diucapkan.
+        </h2>
+
+        <div class="specimens">
+          <div class="spec reveal">
+            <div class="spec__aa">Aa</div>
+            <div class="spec__meta">Inter — Sans / Display &amp; UI</div>
+          </div>
+          <div class="spec reveal" data-delay="90">
+            <div class="spec__aa">Aa</div>
+            <div class="spec__meta">Instrument Serif — Aksen &amp; Kutipan</div>
+          </div>
+          <div class="spec reveal" data-delay="180">
+            <div class="spec__aa">Aa</div>
+            <div class="spec__meta">JetBrains Mono — Label &amp; Data</div>
+          </div>
+        </div>
+
+        <div class="scale">
+          <div class="scale__row reveal">
+            <span class="t-display">Ruang Kosong</span>
+            <span class="scale__meta">Display · 96 / 800</span>
+          </div>
+          <div class="scale__row reveal">
+            <span class="t-head">Judul Bagian</span>
+            <span class="scale__meta">Heading · 48 / 600</span>
+          </div>
+          <div class="scale__row reveal">
+            <span class="t-body"
+              >Teks paragraf mengalir dengan lebar 44–52 karakter per baris agar
+              mata tetap nyaman membaca dalam waktu lama.</span
+            >
+            <span class="scale__meta">Body · 17 / 400</span>
+          </div>
+          <div class="scale__row reveal">
+            <span class="t-cap">Label — 2026</span>
+            <span class="scale__meta">Caption · 11 / Mono</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ALBUM ============ -->
+      <section class="section wrap" id="album">
+        <div class="label reveal"><span class="mono">04 — Album</span></div>
+        <h2 class="sec-title reveal" style="margin-bottom: 0">
+          Arsip <em>visual</em> dari perjalanan kecil.
+        </h2>
+
+        <div class="album" id="album-grid">
+          <figure class="ph reveal" data-caption="Tipografi jalanan — 2025">
+            <img
+              src="https://picsum.photos/seed/typography-01/1000/1250"
+              alt="Tipografi jalanan"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Tipografi jalanan</span><span class="ph__idx">01</span>
+            </figcaption>
+          </figure>
+          <figure
+            class="ph reveal"
+            data-delay="60"
+            data-caption="Studio, pagi — 2025"
+          >
+            <img
+              src="https://picsum.photos/seed/typography-02/1000/700"
+              alt="Studio pagi"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Studio, pagi</span><span class="ph__idx">02</span>
+            </figcaption>
+          </figure>
+          <figure
+            class="ph reveal"
+            data-delay="120"
+            data-caption="Detail huruf — 2024"
+          >
+            <img
+              src="https://picsum.photos/seed/typography-03/1000/1000"
+              alt="Detail huruf"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Detail huruf</span><span class="ph__idx">03</span>
+            </figcaption>
+          </figure>
+          <figure class="ph reveal" data-caption="Cetak &amp; kertas — 2024">
+            <img
+              src="https://picsum.photos/seed/typography-04/1000/1350"
+              alt="Cetak dan kertas"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Cetak &amp; kertas</span><span class="ph__idx">04</span>
+            </figcaption>
+          </figure>
+          <figure
+            class="ph reveal"
+            data-delay="60"
+            data-caption="Ruang kerja — 2024"
+          >
+            <img
+              src="https://picsum.photos/seed/typography-05/1000/720"
+              alt="Ruang kerja"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Ruang kerja</span><span class="ph__idx">05</span>
+            </figcaption>
+          </figure>
+          <figure
+            class="ph reveal"
+            data-delay="120"
+            data-caption="Pameran kecil — 2023"
+          >
+            <img
+              src="https://picsum.photos/seed/typography-06/1000/1100"
+              alt="Pameran kecil"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Pameran kecil</span><span class="ph__idx">06</span>
+            </figcaption>
+          </figure>
+          <figure class="ph reveal" data-caption="Arsip — 2023">
+            <img
+              src="https://picsum.photos/seed/typography-07/1000/780"
+              alt="Arsip"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Arsip</span><span class="ph__idx">07</span>
+            </figcaption>
+          </figure>
+          <figure
+            class="ph reveal"
+            data-delay="60"
+            data-caption="Perjalanan utara — 2023"
+          >
+            <img
+              src="https://picsum.photos/seed/typography-08/1000/1250"
+              alt="Perjalanan utara"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Perjalanan utara</span><span class="ph__idx">08</span>
+            </figcaption>
+          </figure>
+          <figure
+            class="ph reveal"
+            data-delay="120"
+            data-caption="Malam, meja kerja — 2022"
+          >
+            <img
+              src="https://picsum.photos/seed/typography-09/1000/900"
+              alt="Malam di meja kerja"
+              loading="lazy"
+            />
+            <figcaption class="ph__cap">
+              <span>Malam, meja kerja</span><span class="ph__idx">09</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ CONTACT ============ -->
+      <section class="contact wrap" id="contact">
+        <div class="label reveal"><span class="mono">05 — Kontak</span></div>
+
+        <p class="contact__eyebrow mono reveal">Punya proyek? Mari bicara.</p>
+
+        <a class="contact__mail reveal" href="mailto:halo@rakaadiputra.com">
+          halo@rakaadiputra.com
+        </a>
+
+        <div class="socials reveal">
+          <a href="#">Instagram <span>↗</span></a>
+          <a href="#">Behance <span>↗</span></a>
+          <a href="#">Dribbble <span>↗</span></a>
+          <a href="#">LinkedIn <span>↗</span></a>
+          <a href="#">Resume <span>↗</span></a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <span class="mono">© 2026 Raka Adiputra</span>
+      <span class="mono">Dibuat dengan tipografi &amp; ruang kosong</span>
+      <a href="#home" class="mono">Kembali ke atas ↑</a>
+    </footer>
+
+    <!-- ============ LIGHTBOX ============ -->
+    <div
+      class="lb"
+      id="lb"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Galeri foto"
+    >
+      <button class="lb__btn lb__close" id="lb-close" aria-label="Tutup">
+        ✕
+      </button>
+      <button class="lb__btn lb__prev" id="lb-prev" aria-label="Sebelumnya">
+        ←
+      </button>
+      <img class="lb__img" id="lb-img" src="" alt="" />
+      <button class="lb__btn lb__next" id="lb-next" aria-label="Selanjutnya">
+        →
+      </button>
+      <div class="lb__cap" id="lb-cap"></div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        /* ---------- Progress bar ---------- */
+        var bar = document.getElementById("progress");
+        function onScroll() {
+          var h = document.documentElement.scrollHeight - window.innerHeight;
+          var p = h > 0 ? window.scrollY / h : 0;
+          bar.style.transform = "scaleX(" + p + ")";
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+
+        /* ---------- Nav scrolled state ---------- */
+        var nav = document.getElementById("nav");
+        function navState() {
+          if (window.scrollY > 40) nav.classList.add("scrolled");
+          else nav.classList.remove("scrolled");
+        }
+        window.addEventListener("scroll", navState, { passive: true });
+        navState();
+
+        /* ---------- Reveal on scroll ---------- */
+        var revealEls = document.querySelectorAll(".reveal");
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                  e.target.classList.add("in");
+                  io.unobserve(e.target);
+                }
+              });
+            },
+            { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
+          );
+
+          revealEls.forEach(function (el) {
+            if (el.dataset.delay)
+              el.style.transitionDelay = el.dataset.delay + "ms";
+            io.observe(el);
+          });
+        } else {
+          revealEls.forEach(function (el) {
+            el.classList.add("in");
+          });
+        }
+
+        /* ---------- Active nav link ---------- */
+        var sections = document.querySelectorAll("section[id]");
+        var navLinks = document.querySelectorAll(".nav__links a");
+        if ("IntersectionObserver" in window) {
+          var spy = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                  var id = e.target.getAttribute("id");
+                  navLinks.forEach(function (a) {
+                    a.classList.toggle(
+                      "active",
+                      a.getAttribute("href") === "#" + id,
+                    );
+                  });
+                }
+              });
+            },
+            { threshold: 0.35, rootMargin: "-20% 0px -50% 0px" },
+          );
+          sections.forEach(function (s) {
+            spy.observe(s);
+          });
+        }
+
+        /* ---------- Lightbox ---------- */
+        var photos = Array.prototype.slice.call(
+          document.querySelectorAll(".ph"),
+        );
+        var lb = document.getElementById("lb");
+        var lbImg = document.getElementById("lb-img");
+        var lbCap = document.getElementById("lb-cap");
+        var idx = 0;
+
+        function render() {
+          var fig = photos[idx];
+          var img = fig.querySelector("img");
+          lbImg.style.transition = "none";
+          lbImg.style.opacity = "0";
+          lbImg.src = img.currentSrc || img.src;
+          lbImg.alt = img.alt || "";
+          lbCap.textContent =
+            (fig.dataset.caption || "") +
+            "  —  " +
+            String(idx + 1).padStart(2, "0") +
+            " / " +
+            String(photos.length).padStart(2, "0");
+          requestAnimationFrame(function () {
+            lbImg.style.transition = "";
+            lbImg.style.opacity = "";
+          });
+        }
+
+        function openLb(i) {
+          idx = i;
+          render();
+          lb.classList.add("open");
+          document.body.style.overflow = "hidden";
+        }
+        function closeLb() {
+          lb.classList.remove("open");
+          document.body.style.overflow = "";
+        }
+        function step(dir) {
+          idx = (idx + dir + photos.length) % photos.length;
+          render();
+        }
+
+        photos.forEach(function (fig, i) {
+          fig.addEventListener("click", function () {
+            openLb(i);
+          });
+        });
+
+        document.getElementById("lb-close").addEventListener("click", closeLb);
+        document
+          .getElementById("lb-prev")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            step(-1);
+          });
+        document
+          .getElementById("lb-next")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            step(1);
+          });
+        lb.addEventListener("click", function (e) {
+          if (e.target === lb) closeLb();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (!lb.classList.contains("open")) return;
+          if (e.key === "Escape") closeLb();
+          if (e.key === "ArrowRight") step(1);
+          if (e.key === "ArrowLeft") step(-1);
+        });
+      })();
+    </script>
+  </body>
+</html>

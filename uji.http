@@ -1,0 +1,11 @@
+GET /api/profil/me?name=redddra
+Host: "localhost"
+Content-Type: application/json
+Accept: application/json
+
+{
+
+
+"":"",
+
+}
