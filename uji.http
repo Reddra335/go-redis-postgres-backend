@@ -1,11 +1,38 @@
-GET /api/profil/me?name=redddra
-Host: "localhost"
+POST http://localhost:3000/api/register
 Content-Type: application/json
 Accept: application/json
 
 {
 
 
-"":"",
+"name":"Reddra",
+"username":"iska22",
+"password":"123456789000",
+"prodi":"S1 TE",
+"email":"masterrendi90@gmail.com"
 
 }
+
+
+
+###
+POST http://localhost:3000/api/clear-cookie
+
+
+###
+POST http://localhost:3000/api/otp
+Content-Type: application/json
+Accept: application/json
+
+{
+	"otp":"200073"
+}
+
+
+
+
+	# Name     string `validate:"required,min=1,max=50" json:"name"`
+	# Username string `validate:"required,min=1,max=50,unique" json:"username"`
+	# Password string `validate:"required,min=8,max=255" json:"password"`
+	# Prodi    string `validate:"required,min=1,max=20" json:"prodi"`
+	# Email    string `validate:"required,min=1,max=50,unique" json:"email"`

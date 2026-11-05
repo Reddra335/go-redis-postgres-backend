@@ -10,15 +10,14 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-func InitDB() (*sql.DB, error) {
-	config := Load()
+func InitDB(config *Config) (*sql.DB, error) {
 
 	dns := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.DbHost,
-		config.DbPort,
-		config.DbUser,
-		config.DbPassword,
-		config.DbName,
+		config.DB.DbHost,
+		config.DB.DbPort,
+		config.DB.DbUser,
+		config.DB.DbPassword,
+		config.DB.DbName,
 	)
 
 	DB, err := sql.Open("pgx", dns)

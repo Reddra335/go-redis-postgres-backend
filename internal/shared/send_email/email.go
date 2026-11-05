@@ -2,19 +2,50 @@ package sendemail
 
 import (
 	"fmt"
-	"os"
+	"newProjek/internal/shared/config"
+	"newProjek/internal/shared/logger"
 	"strconv"
 
+	"github.com/sirupsen/logrus"
 	"gopkg.in/gomail.v2"
 )
 
-func SendEmail(emailUser string, otp string) error {
+// Interface dengan penamaan yang lebih idiomatic Go
+type EmailSender interface {
+	SendOTP(emailUser string, otp string) error
+}
 
+type implnSendEmail struct {
+	dialer *gomail.Dialer
+	from   string
+}
+
+// Inisialisasi koneksi dialer
+func NewImplnSendEmail(config *config.Config) EmailSender {
+	send := config.SendEmail
+	port, err := strconv.Atoi(send.Port)
+	log := logger.New()
+	if err != nil {
+		log.WithFields(logrus.Fields{
+
+			"operation": "send email",
+			"layer":     "send email",
+		}).WithError(err).Error("gagal mengkomper port")
+	}
+	//Host,Port,Email,Password
+	dialer := gomail.NewDialer(send.Host, port, send.Email, send.Password)
+	return &implnSendEmail{
+		dialer: dialer,
+		from:   send.Email,
+	}
+}
+
+func (g *implnSendEmail) SendOTP(emailUser string, otp string) error {
 	msg := gomail.NewMessage()
-	msg.SetHeader("FROM", os.Getenv("SMTP_EMAIL"))
+	msg.SetHeader("From", g.from)
 	msg.SetHeader("To", emailUser)
 	msg.SetHeader("Subject", "Verifikasi OTP")
-	msg.SetBody("text/plain", "kode OTP anda berlaku 5 menit: "+otp)
+	msg.SetBody("text/plain", "Kode OTP Anda berlaku 5 menit: "+otp)
 
 	htmlBody := fmt.Sprintf(`
 		<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
@@ -30,17 +61,7 @@ func SendEmail(emailUser string, otp string) error {
 	`, otp)
 
 	msg.AddAlternative("text/html", htmlBody)
-	port, err := strconv.Atoi(os.Getenv("SMTP_PORT"))
-	if err != nil {
-		return err
-	}
 
-	dialer := gomail.NewDialer(
-		os.Getenv("SMTP_HOST"),
-		port,
-		os.Getenv("SMTP_EMAIL"),
-		os.Getenv("SMTP_PASSWORD"),
-	)
-
-	return dialer.DialAndSend(msg)
+	// Tinggal panggil dialer yang sudah siap dari constructor
+	return g.dialer.DialAndSend(msg)
 }

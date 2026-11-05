@@ -2,63 +2,21 @@ package profilmahasiswa
 
 import (
 	"context"
-	"newProjek/internal/helperdb"
 )
 
-// Interface untuk repo
+// Interface untuk postgreSQL
 
 type MhsRepo interface {
-	TambahMhs(ctx context.Context, domain Profil, exec helperdb.Executor) (Profil, error)
-	GetById(ctx context.Context, id int, exec helperdb.Executor) (Profil, error)
+	TambahMhs(ctx context.Context, domain Profil) (Profil, error)
+	GetById(ctx context.Context, id int) (Profil, error)
 }
 
-// Implementasi
-type MhsRepoMhsImpln struct {
-}
+// Interface untuk Redis
+type RedisUser interface {
+	CreateUser(ctx context.Context, do Profil, key string) string
+	GetUserEmail(ctx context.Context, key string) string
 
-func NewRepoMhsImpln() MhsRepo {
-
-	return &MhsRepoMhsImpln{}
-
-}
-
-func (m *MhsRepoMhsImpln) TambahMhs(ctx context.Context, domain Profil, exec helperdb.Executor) (Profil, error) {
-	query := "INSERT INTO mahasiswa.profil (name, username, email, password, prodi) VALUES ('?', '?', '?', '?', '?')"
-
-	data, err := exec.ExecContext(ctx, query, domain.Name, domain.Username, domain.Email, domain.Password, domain.Prodi)
-
-	if err != nil {
-
-		return Profil{}, err
-
-	}
-
-	id, err := data.LastInsertId()
-
-	if err != nil {
-		return Profil{}, err
-	}
-
-	resId := int(id)
-	domain.ID = resId
-
-	return domain, nil
-}
-func (m *MhsRepoMhsImpln) GetById(ctx context.Context, id int, exec helperdb.Executor) (Profil, error) {
-
-	query := "SELECT id, name, username, email, password, prodi FROM mahasiswa.profil WHERE id=?"
-
-	row := exec.QueryRowContext(ctx, query, id)
-
-	var mhs Profil
-
-	err := row.Scan(&mhs.ID, &mhs.Name, &mhs.Username, &mhs.Email, &mhs.Prodi)
-
-	if err != nil {
-
-		return Profil{}, err
-
-	}
-
-	return mhs, nil
+	SimpanOTP(ctx context.Context, otp string, keyUser string) string // menambahkan otp sekaligus mengembalikan otp nya, redis string
+	GetUser(ctx context.Context, key string) Profil
+	GetOTP(ctx context.Context, key string) DataOTP
 }

@@ -1,16 +1,27 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
 
-func TestUji(t *testing.T) {
-
-	config := Load()
-	fmt.Println(config.DbName)
+type Mahasiswa struct {
+	Name string `json:"name"`
+	Umur int    `json:"umur"`
 }
 
-func TestDB(t *testing.T) {
-	InitDB()
+func TestUji(t *testing.T) {
+
+	mhs := []Mahasiswa{
+		{Name: "Reddra", Umur: 20},
+		{Name: "Rendi", Umur: 20},
+	}
+
+	b, _ := json.Marshal(mhs)
+
+	fmt.Println(string(b))
+
+	fmt.Println("hai")
+
 }

@@ -1,4 +1,4 @@
-package sendemail
+package generatecode
 
 import (
 	"crypto/rand"
