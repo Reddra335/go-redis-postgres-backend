@@ -16,6 +16,7 @@ import (
 type ProfileService interface {
 	Register(ctx context.Context, req ReqMahasiswa, keyvalid string) ResponseMahasiswa
 	VerifyOTP(ctx context.Context, key string, reqOtp string) (ResponseMahasiswa, error)
+	LoginService(ctx context.Context, username, password, email string)
 }
 
 // send email
@@ -208,4 +209,17 @@ func (s *profileServiceImpln) VerifyOTP(ctx context.Context, key string, reqOtp 
 		Email:    mhs.Email,
 		Prodi:    mhs.Prodi,
 	}, nil
+}
+
+func (s *profileServiceImpln) LoginService(ctx context.Context, username, password, email string) {
+
+s.repo.GetById(ctx,)
+
+
+
+
+
+
+
+
 }

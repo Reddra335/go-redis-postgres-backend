@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"newProjek/internal/shared/helper/errprogram"
 	"os"
 	"time"
 
@@ -21,21 +22,20 @@ func getSecretPass() []byte {
 }
 
 type JwtKlaim struct {
-	Id       int    `json:"id"`
+	ID       int    `json:"id"`
 	Username string `json:"username"`
-	Role     string `json:"role"`
+	Email    string `json:"email"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJwt(id int, username, role string) (string, error) {
+func GenerateJwt(ID int, username, email string) (string, error) {
 	godotenv.Load()
-
 	now := time.Now().UTC()
 	waktu := now.Add(10 * time.Hour)
 	claimjwt := &JwtKlaim{
-		Id:       id,
+		ID:       ID,
 		Username: username,
-		Role:     role,
+		Email:    email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "tamplate_golang",
 			ExpiresAt: jwt.NewNumericDate(waktu),
@@ -47,6 +47,7 @@ func GenerateJwt(id int, username, role string) (string, error) {
 
 	pass, err := token.SignedString(getSecretPass())
 	if err != nil {
+		errprogram.ErrorField("error", "GenerateJwt", "Auth", "pembuat JWT gagal", err)
 		return "", err
 	}
 
@@ -62,6 +63,8 @@ func ValidateJwt(tokenString string) (*JwtKlaim, error) {
 
 		if !ok {
 
+			errprogram.ErrorField("error", "ValidateJWT", "Auth", "Metode Salah", errors.New("Metode salah"))
+
 			return nil, fmt.Errorf("salah metode %v", t.Header["alg"])
 
 		}
@@ -71,9 +74,12 @@ func ValidateJwt(tokenString string) (*JwtKlaim, error) {
 	})
 
 	if err != nil {
+		errprogram.ErrorField("error", "ValidateJwt", "Auth", "Error pada pemeriksaan token", err)
+
 		return nil, err
 	}
 	if !token.Valid {
+		errprogram.ErrorField("error", "ValidateJwt", "Auth", "pembuat JWT gagal", errors.New("token tidak valid"))
 		return nil, errors.New("token tidak valid")
 	}
 

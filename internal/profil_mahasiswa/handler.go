@@ -52,13 +52,13 @@ func (h *profilHandlerImpln) Register(c fiber.Ctx) error {
 	ck := fmt.Sprintf("cookie masih ada: %s", redisotp)
 	log.Info(ck)
 	respone := h.service.Register(c.Context(), req, redisotp)
-	// if respone.Email != "" {
-	// 	return c.Status(302).JSON(fiber.Map{
-	// 		"code":    302,
-	// 		"status":  "Move To Verify",
-	// 		"message": "Lanjutkan Ke Verify",
-	// 	})
-	// }
+	if respone.Email != "" {
+		return c.Status(302).JSON(fiber.Map{
+			"code":    302,
+			"status":  "Move To Verify",
+			"message": "Lanjutkan Ke Verify",
+		})
+	}
 	ambil := &Resp{
 		Name:     respone.Name,
 		Username: respone.Username,

@@ -6,7 +6,7 @@ package main
 import (
 	"profil_service/internal/shared/config"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/google/wire"
 )
 

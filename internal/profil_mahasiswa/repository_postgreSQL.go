@@ -43,7 +43,7 @@ func (m *mhsRepoMhsImpln) GetById(ctx context.Context, id int) (Profil, error) {
 
 	var mhs Profil
 
-	err := row.Scan(&mhs.ID, &mhs.Name, &mhs.Username, &mhs.Password, &mhs.Email, &mhs.Prodi)
+	err := row.Scan(&mhs.ID, &mhs.Name, &mhs.Username, &mhs.Email, &mhs.Password, &mhs.Prodi)
 
 	if err != nil {
 
@@ -52,4 +52,8 @@ func (m *mhsRepoMhsImpln) GetById(ctx context.Context, id int) (Profil, error) {
 	}
 
 	return mhs, nil
+}
+func (m *mhsRepoMhsImpln) GetByEmailUsername(ctx context.Context, email, username string) (Profil, error) {
+
+	return Profil{}, nil
 }

@@ -9,6 +9,7 @@ import (
 type MhsRepo interface {
 	TambahMhs(ctx context.Context, domain Profil) (Profil, error)
 	GetById(ctx context.Context, id int) (Profil, error)
+	GetByEmailUsername(ctx context.Context, email, username string) (Profil, error)
 }
 
 // Interface untuk Redis
